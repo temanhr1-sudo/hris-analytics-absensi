@@ -20,7 +20,7 @@ const MenuDashboard = ({ onSelectTool }) => {
       title: 'Recruitment Analytics',
       desc: 'Analisa Turn over, Hitung Time to Hire & Efektivitas Channel Sourcing.',
       icon: '🤝',
-      status: 'soon',
+      status: 'active',
       color: 'bg-purple-600'
     },
     {

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useClerk, useUser } from "@clerk/clerk-react";
 
 // --- 1. IMPORT FITUR BARU (Pastikan file ini ada di folder src) ---
-import MenuDashboard from './MenuDashboard.jsx';
-import RecruitmentTool from './RecruitmentTool.jsx';
+import MenuDashboard from './tools/menu/MenuDashboard.jsx';
+import RecruitmentTool from './tools/recruitment/RecruitmentTool.jsx';
 
 // --- 2. IMPORT FITUR LAMA (Pastikan path folder components benar) ---
 import UploadPage from './components/UploadPage';
