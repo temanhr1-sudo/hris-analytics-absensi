@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import Chart from 'chart.js/auto';
-import './RecruitmentTool.css'; // Import CSS yang tadi dibuat
+import './RecruitmentStyle.css';
 
 const RecruitmentTool = ({ onBack }) => {
   // State untuk Data
