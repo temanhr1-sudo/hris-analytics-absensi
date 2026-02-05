@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { useClerk } from "@clerk/clerk-react";
+import React, { useState, useEffect } from 'react';
+import { useClerk, useUser } from "@clerk/clerk-react";
 
-// --- 1. IMPORT FITUR BARU ---
-// Pastikan kedua file ini ada di folder src!
+// --- 1. IMPORT FITUR BARU (Pastikan file ini ada di folder src) ---
 import MenuDashboard from './MenuDashboard.jsx';
 import RecruitmentTool from './RecruitmentTool.jsx';
 
-// --- 2. IMPORT FITUR LAMA (ABSENSI) ---
+// --- 2. IMPORT FITUR LAMA (Pastikan path folder components benar) ---
 import UploadPage from './components/UploadPage';
 import Dashboard from './components/Dashboard';
 import KPIMatrix from './components/KPIMatrix';
@@ -17,19 +16,22 @@ import EmployeeManagement from './components/EmployeeManagement';
 import TrendsAnalysis from './components/TrendsAnalysis';
 
 const App = () => {
-  // --- STATE UTAMA ---
   const { signOut } = useClerk();
+  const { user } = useUser();
   
-  // State untuk memilih Tools (null = Menu Utama, 'absensi' = App Lama, 'recruitment' = App Baru)
+  // STATE UTAMA: Menentukan sedang di menu mana
+  // null = Menu Utama (5 Pilihan)
+  // 'recruitment' = Tools Rekrutmen
+  // 'absensi' = Tools Absensi (App Lama)
   const [activeTool, setActiveTool] = useState(null);
 
-  // --- STATE UNTUK APPS ABSENSI (KODE LAMA) ---
+  // --- STATE KHUSUS APP ABSENSI (LAMA) ---
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState('upload');
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [navParams, setNavParams] = useState(null);
 
-  // --- HANDLER NAVIGASI ABSENSI ---
+  // --- HANDLERS ABSENSI ---
   const handleNavigate = (page, params = null) => {
     setCurrentPage(page);
     setNavParams(params);
@@ -37,12 +39,11 @@ const App = () => {
 
   const handleDataUpload = (uploadedData) => {
     if (uploadedData.length > 100000) {
-      alert('⚠️ Data terlalu besar! Maksimal 100,000 baris.');
+      alert('⚠️ Data terlalu besar!');
       return;
     }
     // Loading simulasi
     if (uploadedData.length > 5000) alert('📊 Memproses data...');
-    
     setTimeout(() => {
       setData(uploadedData);
       setCurrentPage('dashboard');
@@ -52,55 +53,50 @@ const App = () => {
   const handleDataUpdate = (updatedData) => setData(updatedData);
   const handleExit = () => setShowExitConfirm(true);
 
-  // Reset Data saat keluar dari Absensi App
-  const confirmExitAbsensi = () => {
+  // LOGIC KELUAR DARI MENU ABSENSI (KEMBALI KE MENU UTAMA)
+  const exitToMainMenu = () => {
+    // Reset data absensi
     setData([]);
     setNavParams(null);
     setCurrentPage('upload');
     setShowExitConfirm(false);
-    // Kita tidak SignOut, tapi kembali ke Menu Tools
+    // KEMBALI KE MENU 5 PILIHAN
     setActiveTool(null); 
   };
 
-  // --- LOGIC TAMPILAN (ROUTING SEDERHANA) ---
+  // --- RENDER UTAMA (LOGIC PINTU GERBANG) ---
 
-  // 1. Jika belum pilih tools, tampilkan MENU DASHBOARD
+  // 1. JIKA BELUM MEMILIH TOOLS -> TAMPILKAN MENU 5 PILIHAN
   if (!activeTool) {
     return <MenuDashboard onSelectTool={setActiveTool} />;
   }
 
-  // 2. Jika pilih RECRUITMENT
+  // 2. JIKA MEMILIH TOOLS REKRUTMEN
   if (activeTool === 'recruitment') {
     return <RecruitmentTool onBack={() => setActiveTool(null)} />;
   }
 
-  // 3. Jika pilih ABSENSI (Render Logic Lama)
+  // 3. JIKA MEMILIH TOOLS ABSENSI (APP LAMA)
   if (activeTool === 'absensi') {
     return (
       <div className="relative min-h-screen bg-gray-50">
         
-        {/* Tombol Back Kecil (Opsional: Agar bisa balik ke menu tanpa reset data) */}
-        {currentPage === 'dashboard' && (
-             <button 
-                onClick={() => setActiveTool(null)}
-                className="fixed bottom-4 left-4 z-50 bg-slate-800 text-white px-4 py-2 rounded-full shadow-lg text-xs hover:bg-black transition"
-             >
-                ← Menu Utama
-             </button>
-        )}
+        {/* TOMBOL KEMBALI KE MENU UTAMA (SELALU MUNCUL DI POJOK KIRI ATAS) */}
+        <button 
+            onClick={() => {
+                // Jika sedang di halaman upload (belum ada data), langsung balik aja
+                if(data.length === 0) setActiveTool(null);
+                // Jika sudah ada data, konfirmasi dulu
+                else setShowExitConfirm(true);
+            }} 
+            className="fixed top-4 left-4 z-50 bg-slate-800 text-white px-4 py-2 rounded-full shadow-lg text-xs font-bold hover:bg-black transition flex items-center gap-2"
+        >
+            <span>←</span> Menu Utama
+        </button>
 
-        {/* --- LOGIC ABSENSI LAMA --- */}
+        {/* LOGIC RENDER HALAMAN ABSENSI LAMA */}
         {(currentPage === 'upload' || data.length === 0) ? (
-          // Tambahkan tombol back di halaman upload juga
-          <div>
-            <button 
-                onClick={() => setActiveTool(null)} 
-                className="fixed top-4 left-4 z-50 bg-gray-500 text-white px-3 py-1 rounded shadow text-sm hover:bg-gray-600"
-            >
-                ← Menu Utama
-            </button>
-            <UploadPage onDataUpload={handleDataUpload} />
-          </div>
+          <UploadPage onDataUpload={handleDataUpload} />
         ) : (
           <>
             {currentPage === 'dashboard' && <Dashboard data={data} onNavigate={handleNavigate} onDataUpdate={handleDataUpdate} onExit={handleExit} />}
@@ -113,14 +109,14 @@ const App = () => {
           </>
         )}
 
-        {/* MODAL KONFIRMASI KELUAR ABSENSI */}
+        {/* MODAL KONFIRMASI KELUAR */}
         {showExitConfirm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">⚠️ Keluar dari Absensi?</h3>
-              <p className="text-gray-600 mb-6">Data yang diupload akan di-reset. Anda akan kembali ke Menu Utama.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">⚠️ Kembali ke Menu Utama?</h3>
+              <p className="text-gray-600 mb-6">Data absensi yang sedang dibuka akan ditutup (reset). Anda akan kembali ke halaman pemilihan tools.</p>
               <div className="flex gap-3">
-                <button onClick={confirmExitAbsensi} className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-semibold">Ya, Keluar</button>
+                <button onClick={exitToMainMenu} className="flex-1 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition font-semibold">Ya, Keluar</button>
                 <button onClick={() => setShowExitConfirm(false)} className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition font-semibold">Batal</button>
               </div>
             </div>
