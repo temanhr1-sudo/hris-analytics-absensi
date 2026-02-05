@@ -5,7 +5,7 @@ import './index.css'
 import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react'
 
 // 🔴 GANTI TEKS INI DENGAN KODE YANG ANDA COPY DARI DASHBOARD CLERK TADI
-const PUBLISHABLE_KEY = "VITE_CLERK_PUBLISHABLE_KEY=pk_test_dmVyaWZpZWQtbXV0dC0wLmNsZXJrLmFjY291bnRzLmRldiQ"
+const PUBLISHABLE_KEY = "pk_test_dmVyaWZpZWQtbXV0dC0wLmNsZXJrLmFjY291bnRzLmRldiQ"
 
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
