@@ -7,11 +7,13 @@ import EmployeeAnalysis from './components/EmployeeAnalysis';
 import LeaveAnalytics from './components/LeaveAnalytics';
 import EmployeeManagement from './components/EmployeeManagement';
 import TrendsAnalysis from './components/TrendsAnalysis';
+import { useClerk, UserButton } from "@clerk/clerk-react";
 
 const App = () => {
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState('upload');
   const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const { signOut } = useClerk(); // Tambah ini
   
   // NEW: State untuk menampung parameter navigasi (data titipan antar halaman)
   const [navParams, setNavParams] = useState(null);
@@ -60,15 +62,16 @@ const App = () => {
     setShowExitConfirm(true);
   };
 
-  const confirmExit = () => {
-    // Reset state (Hapus data dari memory)
-    setData([]);
-    setShowExitConfirm(false);
-    setNavParams(null);
-    
-    // Force navigate to upload page
-    setCurrentPage('upload');
-  };
+const confirmExit = () => {
+  // Hapus data lokal
+  setData([]);
+  setShowExitConfirm(false);
+  setNavParams(null);
+  setCurrentPage('upload');
+
+  // Logout dari Clerk
+  signOut(); 
+};
 
   // --- RENDER ---
 
