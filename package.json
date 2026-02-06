@@ -11,6 +11,8 @@
   "dependencies": {
     "@clerk/clerk-react": "^5.60.0",
     "chart.js": "^4.5.1",
+    "jspdf": "^4.1.0",
+    "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
