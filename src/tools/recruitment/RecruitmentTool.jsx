@@ -663,8 +663,18 @@ const RecruitmentTool = ({ onBack }) => {
                                 <h2 className="text-2xl font-bold">🗂️ Bank Data Kandidat Potensial</h2>
                                 <p className="text-purple-100 mt-1">Database kandidat yang pernah melamar, diwawancarai, atau disimpan.</p>
                             </div>
-                            <div className="bg-white/20 p-3 rounded-lg text-xs max-w-sm backdrop-blur-sm border border-white/30">
-                                ℹ️ <strong>Info Skoring:</strong> Nilai 0-100 didapat dari hasil rata-rata Interview User & HR. Gunakan Template "Interview Scorecard" (Produk Terpisah) untuk standarisasi penilaian.
+               <div className="bg-white/20 p-3 rounded-lg text-xs max-w-sm backdrop-blur-sm border border-white/30">
+                                ℹ️ <strong>Info Skoring:</strong> Nilai 0-100 didapat dari hasil rata-rata Interview User & HR. Gunakan{' '}
+                                <a 
+                                    href="toko.html" 
+                                    target="_blank" 
+                                    rel="noreferrer" 
+                                    className="underline font-bold text-yellow-300 hover:text-white transition cursor-pointer"
+                                    title="Klik untuk membeli Template Scorecard"
+                                >
+                                    Template "Interview Scorecard"
+                                </a>{' '}
+                                untuk standarisasi penilaian.
                             </div>
                         </div>
                     </div>
