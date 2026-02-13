@@ -171,7 +171,7 @@ const MenuDashboard = ({ onSelectTool }) => {
                   Punya ide fitur analitik baru atau menemukan kendala? Berikan kritik, saran, dan masukan Anda agar TemanHR menjadi lebih baik.
                 </p>
                 <a 
-                  href="mailto:feedback@temanhr.com?subject=Feedback untuk TemanHR" 
+                  href="mailto:support@temanhr.com?subject=Feedback untuk TemanHR" 
                   className="inline-block bg-white border-2 border-blue-600 text-blue-600 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-blue-50 transition-colors"
                 >
                   Kirim Masukan
@@ -193,7 +193,7 @@ const MenuDashboard = ({ onSelectTool }) => {
                   Tertarik mengintegrasikan sistem HR perusahaan Anda dengan analitik kami? Atau ingin berkolaborasi? Mari bangun masa depan HR bersama.
                 </p>
                 <a 
-                  href="mailto:partner@temanhr.com?subject=Peluang Kolaborasi Bisnis TemanHR" 
+                  href="mailto:support@temanhr.com?subject=Peluang Kolaborasi Bisnis TemanHR" 
                   className="inline-block bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-indigo-500 transition-colors shadow-md"
                 >
                   Hubungi Kami
