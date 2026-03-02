@@ -7,6 +7,18 @@ const MenuDashboard = ({ onSelectTool }) => {
 
   // DAFTAR ALAT (ROADMAP LENGKAP)
   const tools = [
+    // --- 0. EKOSISTEM EKSTERNAL (CROSS-SELL) ---
+    {
+      id: 'bursatalenta',
+      title: 'Bursa Talenta (ATS)',
+      desc: 'Pasang lowongan gratis & kelola pelamar.',
+      icon: '🚀',
+      status: 'active',
+      color: 'bg-emerald-500',
+      category: 'Operational',
+      link: 'https://loker.temanhr.my.id', // 💡 Link eksternal ke Job Portal
+      badge: 'HOT' // 💡 Badge khusus
+    },
     // --- 1. OPERATIONAL (FOUNDATION) ---
     {
       id: 'absensi',
@@ -137,7 +149,8 @@ const MenuDashboard = ({ onSelectTool }) => {
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                 <span className="w-8 h-[1px] bg-slate-300"></span> Core Operations
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {/* 💡 Grid diubah jadi lg:grid-cols-3 agar kartu lebih lega dan pas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {tools.filter(t => t.category === 'Operational').map((tool) => (
                     <MenuCard key={tool.id} tool={tool} onSelectTool={onSelectTool} />
                 ))}
@@ -156,7 +169,7 @@ const MenuDashboard = ({ onSelectTool }) => {
             </div>
         </div>
 
-        {/* --- BAGIAN BARU: FEEDBACK & PARTNERSHIP --- */}
+        {/* --- BAGIAN FEEDBACK & PARTNERSHIP --- */}
         <div className="mt-16 border-t border-slate-200 pt-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
@@ -181,7 +194,6 @@ const MenuDashboard = ({ onSelectTool }) => {
 
             {/* Kartu Partnership */}
             <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 border border-slate-700 shadow-lg flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left hover:shadow-xl transition-shadow relative overflow-hidden">
-              {/* Efek Glow di Background */}
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
               
               <div className="w-16 h-16 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-3xl shrink-0 border border-indigo-500/30 relative z-10">
@@ -209,21 +221,30 @@ const MenuDashboard = ({ onSelectTool }) => {
   );
 };
 
-// Sub-component untuk Card agar kodenya lebih rapi
+// Sub-component untuk Card
 const MenuCard = ({ tool, onSelectTool }) => {
     return (
         <div 
             onClick={() => {
-                if(tool.status === 'active') {
+                // 💡 LOGIKA ROUTING: Jika ada URL eksternal, buka di tab baru
+                if (tool.link) {
+                    window.open(tool.link, '_blank');
+                } else if (tool.status === 'active') {
                     onSelectTool(tool.id);
                 } else {
                     alert(`Fitur "${tool.title}" sedang dalam pengembangan! 🚀\n\nFungsi: ${tool.desc}`);
                 }
             }}
-            className={`relative bg-white p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full ${tool.status === 'soon' ? 'opacity-80 hover:opacity-100' : ''}`}
+            className={`relative bg-white p-6 rounded-2xl border ${tool.badge ? 'border-emerald-300 shadow-emerald-100/50' : 'border-slate-100'} shadow-sm hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between h-full ${tool.status === 'soon' ? 'opacity-80 hover:opacity-100' : ''}`}
         >
+            {/* 💡 BADGE MUNCUL JIKA ADA PROPERTI 'badge' */}
+            {tool.badge && (
+                <div className="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-black px-3 py-1 rounded-full shadow-lg border-2 border-white animate-pulse uppercase tracking-widest">
+                    {tool.badge}
+                </div>
+            )}
+
             <div>
-                {/* Header Card */}
                 <div className="flex justify-between items-start mb-4">
                     <div className={`w-12 h-12 ${tool.color} rounded-xl flex items-center justify-center text-2xl shadow-md text-white group-hover:scale-110 transition-transform duration-300`}>
                         {tool.icon}
@@ -235,8 +256,7 @@ const MenuCard = ({ tool, onSelectTool }) => {
                     )}
                 </div>
 
-                {/* Content */}
-                <h3 className="text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors">
+                <h3 className={`text-lg font-bold mb-2 transition-colors ${tool.link ? 'group-hover:text-emerald-600' : 'text-slate-800 group-hover:text-blue-600'}`}>
                     {tool.title}
                 </h3>
                 <p className="text-sm text-slate-500 leading-relaxed">
@@ -244,10 +264,10 @@ const MenuCard = ({ tool, onSelectTool }) => {
                 </p>
             </div>
 
-            {/* Footer Action (Only for Active) */}
+            {/* Footer Action */}
             {tool.status === 'active' && (
-                <div className="mt-6 pt-4 border-t border-slate-50 flex items-center text-blue-600 font-bold text-xs uppercase tracking-wide">
-                    Buka Dashboard <span className="ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                <div className={`mt-6 pt-4 border-t border-slate-50 flex items-center font-bold text-xs uppercase tracking-wide ${tool.link ? 'text-emerald-600' : 'text-blue-600'}`}>
+                    {tool.link ? 'Buka Portal Loker' : 'Buka Dashboard'} <span className="ml-2 group-hover:translate-x-1 transition-transform">{tool.link ? '↗' : '→'}</span>
                 </div>
             )}
         </div>
